@@ -1,0 +1,131 @@
+{
+  "zones": [
+    {
+      "number": 1,
+      "name": "Upper Manhattan",
+      "street_range": "Above 110th Street",
+      "color": "#9b59b6",
+      "color_light": "#d7b8f3",
+      "neighborhoods": [
+        {
+          "name": "Harlem",
+          "fact": "Birthplace of the Harlem Renaissance in the 1920s. The Apollo Theater launched Ella Fitzgerald, James Brown & Stevie Wonder. It begins exactly where Central Park ends."
+        },
+        {
+          "name": "Washington Heights",
+          "fact": "Manhattan's highest natural point at 265 ft. George Washington commanded his Revolutionary War forces from here. The A-train runs express through this stretch."
+        },
+        {
+          "name": "Inwood",
+          "fact": "The last old-growth forest on Manhattan island survives here. Legend says the Dutch purchased all of Manhattan Island from the Lenape near this spot for just $24 in trade goods."
+        }
+      ]
+    },
+    {
+      "number": 2,
+      "name": "Upper East & West Side",
+      "street_range": "72nd to 110th Street \u00b7 Central Park is the dividing line",
+      "color": "#3498db",
+      "color_light": "#aed6f1",
+      "neighborhoods": [
+        {
+          "name": "Upper East Side",
+          "fact": "\"Museum Mile\" — 9 world-class museums packed into one strip of 5th Avenue, including the Met & Guggenheim. Among the most expensive real estate in the world."
+        },
+        {
+          "name": "Upper West Side",
+          "fact": "Home to Lincoln Center, the Museum of Natural History & legendary deli Zabar's. Where Seinfeld, Westside Story, and Rosemary's Baby were all set."
+        },
+        {
+          "name": "Morningside Heights",
+          "fact": "Columbia University was founded in 1754 — older than the United States. Grant's Tomb is here, and yes — both Ulysses S. Grant AND his wife are actually buried inside."
+        }
+      ]
+    },
+    {
+      "number": 3,
+      "name": "Midtown",
+      "street_range": "34th to 72nd Street \u00b7 Penn Station & Grand Central are your anchors",
+      "color": "#e74c3c",
+      "color_light": "#f5b7b1",
+      "neighborhoods": [
+        {
+          "name": "Midtown",
+          "fact": "Times Square draws 50 million visitors a year — more than the Eiffel Tower. The Empire State Building was constructed in just 410 days and has 1,576 steps to the top."
+        },
+        {
+          "name": "Hell's Kitchen",
+          "fact": "Named after a brutal 19th-century gang, its gentler alias is \"Clinton Hill.\" Most of Broadway's performers and crew live here. Great cheap food along 9th Avenue."
+        },
+        {
+          "name": "Murray Hill",
+          "fact": "Named after Scottish merchant Robert Murray. The block known as \"Koreatown\" on 32nd Street has one of the densest concentrations of Korean restaurants outside of Seoul."
+        }
+      ]
+    },
+    {
+      "number": 4,
+      "name": "Downtown",
+      "street_range": "14th to 34th Street \u00b7 The grid starts bending below 14th",
+      "color": "#e67e22",
+      "color_light": "#fad7a0",
+      "neighborhoods": [
+        {
+          "name": "Chelsea",
+          "fact": "The High Line — a 1.45-mile elevated park built on a decommissioned 1930s freight rail line — runs through here. Chelsea piers once docked the Titanic's sister ships."
+        },
+        {
+          "name": "Gramercy",
+          "fact": "The only private park in NYC — residents need an actual iron key to enter. The Flatiron Building at 23rd & Broadway is one of NYC's first skyscrapers (built 1902)."
+        },
+        {
+          "name": "Greenwich Village",
+          "fact": "Bob Dylan, Joan Baez, and Jimi Hendrix all lived within blocks of each other here in the 1960s. Stonewall Inn (gay rights movement birthplace) is on Christopher St."
+        }
+      ]
+    },
+    {
+      "number": 5,
+      "name": "Lower Manhattan",
+      "street_range": "Below 14th Street \u00b7 Streets have names, not numbers",
+      "color": "#27ae60",
+      "color_light": "#a9dfbf",
+      "neighborhoods": [
+        {
+          "name": "SoHo",
+          "fact": "\"South of Houston\" — Manhattanites pronounce it HOW-ston (not HEW-ston). The cast-iron commercial buildings from the 1800s are some of the finest in the world."
+        },
+        {
+          "name": "Tribeca",
+          "fact": "\"Triangle Below Canal.\" Robert De Niro co-founded the Tribeca Film Festival here. One of the priciest zip codes in the U.S. — celebrity residents everywhere."
+        },
+        {
+          "name": "Financial District",
+          "fact": "Wall Street's \"wall\" was a real wooden stockade built in 1653. The NYSE is the world's largest stock exchange. The 9/11 Memorial pools sit where the Twin Towers stood."
+        }
+      ]
+    }
+  ],
+  "quiz_questions": [
+    {
+      "neighborhood": "Harlem",
+      "correct_zone": 1
+    },
+    {
+      "neighborhood": "Midtown",
+      "correct_zone": 3
+    },
+    {
+      "neighborhood": "SoHo",
+      "correct_zone": 5
+    },
+    {
+      "neighborhood": "Upper East Side",
+      "correct_zone": 2
+    },
+    {
+      "neighborhood": "Greenwich Village",
+      "correct_zone": 4
+    }
+  ]
+}
