@@ -108,23 +108,23 @@
   ],
   "quiz_questions": [
     {
-      "neighborhood": "Harlem",
+      "neighborhood": "Inwood",
       "correct_zone": 1
     },
     {
-      "neighborhood": "Midtown",
+      "neighborhood": "Hell's Kitchen",
       "correct_zone": 3
     },
     {
-      "neighborhood": "SoHo",
+      "neighborhood": "Tribeca",
       "correct_zone": 5
     },
     {
-      "neighborhood": "Upper East Side",
+      "neighborhood": "Morningside Heights",
       "correct_zone": 2
     },
     {
-      "neighborhood": "Greenwich Village",
+      "neighborhood": "Gramercy",
       "correct_zone": 4
     }
   ]

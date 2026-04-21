@@ -22,21 +22,16 @@
       </div>
 
       <p class="mb-1">
-        <strong>Correct answer:</strong>
-        <span class="badge text-white" style="background-color: {{ r.correct_zone.color }};">
-          Zone {{ r.correct_zone.number }} — {{ r.correct_zone.name }}
-        </span>
+        <strong>Correct answer:</strong> Zone {{ r.correct_zone.number }} — {{ r.correct_zone.name }}
       </p>
 
       {% if not r.correct %}
-      <p class="mb-0 text-danger">
+      <p class="mb-0">
         <strong>Your answer:</strong>
         {% if r.user_zone %}
-        <span class="badge text-white" style="background-color: {{ r.user_zone.color }};">
           Zone {{ r.user_zone.number }} — {{ r.user_zone.name }}
-        </span>
         {% else %}
-        <em>No answer submitted</em>
+          <em>No answer submitted</em>
         {% endif %}
       </p>
       {% endif %}

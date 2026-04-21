@@ -20,10 +20,8 @@
   <form method="POST">
     {% for zone in zones %}
     <button type="submit" name="answer" value="{{ zone.number }}"
-            class="btn w-100 mb-2 text-white fw-semibold py-3"
-            style="background-color: {{ zone.color }}; border: none;">
+            class="btn btn-outline-secondary w-100 mb-2">
       Zone {{ zone.number }} — {{ zone.name }}
-      <small class="d-block fw-normal opacity-75">{{ zone.street_range }}</small>
     </button>
     {% endfor %}
   </form>
