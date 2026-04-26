@@ -2,36 +2,98 @@
 {% block title %}Zone {{ zone_num }} — {{ zone.name }}{% endblock %}
 
 {% block content %}
-<div class="page">
-  <p class="step-label">Zone {{ zone_num }} of {{ num_zones }}</p>
-  <div class="progress mb-3" style="height: 6px;">
-    <div class="progress-bar" style="width: {{ (zone_num / num_zones * 100)|int }}%; background: var(--navy);"></div>
+<div class="quiz-layout">
+
+  <!-- Left: zone info sidebar -->
+  <div class="quiz-sidebar" style="flex: 0 0 380px; justify-content: flex-start; overflow-y: auto;">
+    <p class="step-label">Zone {{ zone_num }} of {{ num_zones }}</p>
+    <div class="progress mb-3" style="height: 6px;">
+      <div class="progress-bar" style="width: {{ (zone_num / num_zones * 100)|int }}%; background: var(--navy);"></div>
+    </div>
+
+    <div class="zone-band" style="background: {{ zone.color }};"></div>
+
+    <h1 class="mb-0">{{ zone.name }}</h1>
+    <p class="text-muted mb-4" style="font-size: 0.9rem;">{{ zone.street_range }}</p>
+
+    {% for n in zone.neighborhoods %}
+    <div class="hood-card">
+      <h5>{{ n.name }}</h5>
+      <p>{{ n.fact }}</p>
+    </div>
+    {% endfor %}
+
+    <div class="d-flex gap-2 mt-4">
+      {% if zone_num == 1 %}
+        <a href="/" class="btn btn-outline-secondary">← Back</a>
+      {% else %}
+        <a href="/learn/{{ zone_num - 1 }}" class="btn btn-outline-secondary">← Back</a>
+      {% endif %}
+
+      {% if is_last %}
+        <a href="/quiz/1" class="btn btn-primary">Start Quiz →</a>
+      {% else %}
+        <a href="/learn/{{ zone_num + 1 }}" class="btn btn-primary">Next →</a>
+      {% endif %}
+    </div>
   </div>
 
-  <div class="zone-band" style="background: {{ zone.color }};"></div>
+  <!-- Right: map showing current zone's neighborhoods -->
+  <div class="quiz-map-col" id="map-container"></div>
 
-  <h1 class="mb-0">{{ zone.name }}</h1>
-  <p class="text-muted mb-4" style="font-size: 0.9rem;">{{ zone.street_range }}</p>
-
-  {% for n in zone.neighborhoods %}
-  <div class="hood-card">
-    <h5>{{ n.name }}</h5>
-    <p>{{ n.fact }}</p>
-  </div>
-  {% endfor %}
-
-  <div class="d-flex gap-2 mt-4">
-    {% if zone_num == 1 %}
-      <a href="/" class="btn btn-outline-secondary">← Back</a>
-    {% else %}
-      <a href="/learn/{{ zone_num - 1 }}" class="btn btn-outline-secondary">← Back</a>
-    {% endif %}
-
-    {% if is_last %}
-      <a href="/quiz/1" class="btn btn-primary">Start Quiz →</a>
-    {% else %}
-      <a href="/learn/{{ zone_num + 1 }}" class="btn btn-primary">Next →</a>
-    {% endif %}
-  </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script>
+(function () {
+  const ZONE_NUM = {{ zone_num }};
+  const ZONE_COLOR = "{{ zone.color }}";
+
+  const container = document.getElementById("map-container");
+  const W = container.clientWidth;
+  const H = container.clientHeight;
+
+  const svg = d3.select("#map-container")
+    .append("svg")
+    .attr("viewBox", `0 0 ${W} ${H}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .style("width", "100%")
+    .style("height", "100%");
+
+  svg.append("rect").attr("width", W).attr("height", H).attr("fill", "#C9DDE8");
+
+  d3.json("/static/neighborhoods.geojson").then(function (geo) {
+    const projection = d3.geoMercator().fitSize([W, H], geo);
+    const pathGen = d3.geoPath().projection(projection);
+
+    // Non-quiz NTAs — background fill
+    svg.selectAll(".bg-path")
+      .data(geo.features.filter(d => !d.properties.quiz))
+      .join("path")
+      .attr("d", pathGen)
+      .attr("class", "bg-path");
+
+    // Other zones' neighborhoods — treated as background
+    svg.selectAll(".other-hood")
+      .data(geo.features.filter(d => d.properties.quiz && d.properties.zone !== ZONE_NUM))
+      .join("path")
+      .attr("d", pathGen)
+      .attr("class", "bg-path");
+
+    // Current zone's neighborhoods — highlighted with zone color
+    const zonePaths = svg.selectAll(".zone-hood")
+      .data(geo.features.filter(d => d.properties.quiz && d.properties.zone === ZONE_NUM))
+      .join("path")
+      .attr("d", pathGen)
+      .attr("fill", ZONE_COLOR)
+      .attr("stroke", "#fff")
+      .attr("stroke-width", "1.5")
+      .style("pointer-events", "none");
+
+    zonePaths.append("title").text(d => d.properties.name);
+  });
+}());
+</script>
 {% endblock %}
