@@ -49,7 +49,7 @@ def quiz(q_num):
         return redirect(url_for("home"))
 
     if request.method == "POST":
-        answer = request.form.get("answer", type=int)
+        answer = request.form.get("answer", "")
         quiz_answers = session.get("quiz_answers", {})
         quiz_answers[str(q_num)] = answer
         session["quiz_answers"] = quiz_answers
@@ -60,7 +60,7 @@ def quiz(q_num):
 
     question = QUESTIONS[q_num - 1]
     return render_template("quiz.html", question=question, q_num=q_num,
-                           num_questions=NUM_QUESTIONS, zones=ZONES)
+                           num_questions=NUM_QUESTIONS)
 
 
 @app.route("/results")
@@ -69,16 +69,13 @@ def results():
     score = 0
     results_data = []
     for i, q in enumerate(QUESTIONS, 1):
-        user_answer = quiz_answers.get(str(i))
-        correct = user_answer == q["correct_zone"]
+        user_answer = quiz_answers.get(str(i), "")
+        correct = user_answer == q["find"]
         if correct:
             score += 1
-        correct_zone = next(z for z in ZONES if z["number"] == q["correct_zone"])
-        user_zone = next((z for z in ZONES if z["number"] == user_answer), None)
         results_data.append({
-            "neighborhood": q["neighborhood"],
-            "correct_zone": correct_zone,
-            "user_zone": user_zone,
+            "target": q["find"],
+            "user_answer": user_answer or "No answer",
             "correct": correct,
         })
     return render_template("results.html", results=results_data, score=score,
@@ -86,4 +83,4 @@ def results():
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

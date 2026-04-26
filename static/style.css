@@ -1,1 +1,211 @@
-/* placeholder — avoids 404 from base.html */
+/* ── Design tokens ─────────────────────────────────── */
+:root {
+  --bg:       #F3F1EA;   /* warm parchment — base background  */
+  --surface:  #FFFFFF;   /* cards, panels                     */
+  --navy:     #0A2342;   /* primary: headers, nav, labels     */
+  --red:      #C0392B;   /* accent: CTA buttons, highlights   */
+  --text:     #111827;   /* body text                         */
+  --muted:    #6B7280;   /* secondary text, captions          */
+  --border:   #E0DDD4;   /* card borders, dividers            */
+  --success:  #27AE60;   /* correct answer                    */
+  --danger:   #C0392B;   /* wrong answer                      */
+
+  /* SVG map */
+  --zone-default: #C8D6DF;
+  --zone-hover:   #8FAFC2;
+  --zone-select:  #0A2342;
+}
+
+/* ── Typography ────────────────────────────────────── */
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', sans-serif;
+  font-size: 16px;
+  line-height: 1.65;
+}
+
+h1, h2, h3, h4, h5 {
+  font-family: 'Playfair Display', serif;
+  color: var(--navy);
+}
+
+/* ── Layout ────────────────────────────────────────── */
+.page {
+  max-width: 620px;
+  margin: 0 auto;
+  padding: 2.5rem 1.25rem 4rem;
+}
+
+/* ── Home ──────────────────────────────────────────── */
+.home-hero {
+  text-align: center;
+  padding-top: 5rem;
+}
+
+.home-hero h1 {
+  font-size: 3rem;
+  margin-bottom: 0.75rem;
+}
+
+.home-hero .subtitle {
+  color: var(--muted);
+  font-size: 1.05rem;
+  max-width: 380px;
+  margin: 0 auto 2.5rem;
+}
+
+/* ── Step counter ──────────────────────────────────── */
+.step-label {
+  font-size: 0.8rem;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  margin-bottom: 0.25rem;
+}
+
+/* ── Learn cards ───────────────────────────────────── */
+.zone-band {
+  height: 5px;
+  border-radius: 2px;
+  margin-bottom: 1.25rem;
+}
+
+.hood-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 1.1rem 1.4rem;
+  margin-bottom: 0.75rem;
+}
+
+.hood-card h5 {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+}
+
+.hood-card p {
+  font-size: 0.88rem;
+  color: var(--muted);
+  margin: 0;
+}
+
+/* ── Buttons ───────────────────────────────────────── */
+.btn-primary {
+  background-color: var(--navy) !important;
+  border-color: var(--navy) !important;
+}
+
+.btn-primary:hover {
+  background-color: #071b33 !important;
+  border-color: #071b33 !important;
+}
+
+/* ── Quiz side-by-side layout ──────────────────────── */
+.quiz-layout {
+  display: flex;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.quiz-sidebar {
+  flex: 0 0 300px;
+  padding: 2.5rem 2rem;
+  background: var(--bg);
+  border-right: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 0;
+}
+
+.quiz-map-col {
+  flex: 1;
+  overflow: hidden;
+}
+
+/* ── Map ───────────────────────────────────────────── */
+.map-wrap {
+  display: flex;
+  justify-content: center;
+  margin: 1.25rem 0;
+}
+
+#manhattan-map {
+  cursor: pointer;
+  filter: drop-shadow(0 3px 8px rgba(0,0,0,0.18));
+  width: 100%;
+  max-width: 240px;
+}
+
+/* Background NTAs — fill the island, not clickable */
+.bg-path {
+  fill: #D1CBC0;
+  stroke: #BDB5A9;
+  stroke-width: 0.4px;
+  pointer-events: none;
+}
+
+/* Quiz neighborhoods — clickable */
+.hood-path {
+  fill: #A8BEC9;
+  stroke: #fff;
+  stroke-width: 1px;
+  transition: fill 0.12s;
+  cursor: pointer;
+}
+
+.hood-path:hover {
+  fill: #7599AF;
+}
+
+.hood-path.selected {
+  fill: var(--navy);
+}
+
+/* legacy zone map (unused now but kept) */
+.zone-area {
+  fill: var(--zone-default);
+  stroke: #fff;
+  stroke-width: 0.8px;
+  transition: fill 0.12s;
+}
+.zone-area:hover { fill: var(--zone-hover); cursor: pointer; }
+.zone-area.selected { fill: var(--zone-select); }
+
+.zone-label {
+  font-family: 'Inter', sans-serif;
+  font-size: 11px;
+  fill: #4a5568;
+  pointer-events: none;
+  user-select: none;
+}
+
+.selection-box {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 0.9rem 1.1rem;
+  margin-top: 1rem;
+  display: none;
+}
+
+/* ── Results ───────────────────────────────────────── */
+.score-big {
+  font-family: 'Playfair Display', serif;
+  font-size: 4rem;
+  color: var(--navy);
+  line-height: 1;
+}
+
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-left-width: 4px;
+  border-radius: 8px;
+  padding: 1rem 1.25rem;
+  margin-bottom: 0.75rem;
+}
+
+.result-card.correct { border-left-color: var(--success); }
+.result-card.incorrect { border-left-color: var(--danger); }

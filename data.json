@@ -107,25 +107,10 @@
     }
   ],
   "quiz_questions": [
-    {
-      "neighborhood": "Inwood",
-      "correct_zone": 1
-    },
-    {
-      "neighborhood": "Hell's Kitchen",
-      "correct_zone": 3
-    },
-    {
-      "neighborhood": "Tribeca",
-      "correct_zone": 5
-    },
-    {
-      "neighborhood": "Morningside Heights",
-      "correct_zone": 2
-    },
-    {
-      "neighborhood": "Gramercy",
-      "correct_zone": 4
-    }
+    { "find": "Inwood" },
+    { "find": "Hell's Kitchen" },
+    { "find": "Tribeca" },
+    { "find": "Morningside Heights" },
+    { "find": "Gramercy" }
   ]
 }

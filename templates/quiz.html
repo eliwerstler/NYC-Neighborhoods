@@ -1,32 +1,92 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Quiz - Question {{ q_num }}</title>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
-</head>
-<body class="container mt-4">
+{% extends "base.html" %}
+{% block title %}Quiz — Question {{ q_num }}{% endblock %}
 
-  <p class="text-muted">Question {{ q_num }} of {{ num_questions }}</p>
+{% block content %}
+<div class="quiz-layout">
 
-  <div class="progress mb-4" style="height: 8px;">
-    <div class="progress-bar" style="width: {{ (q_num / num_questions * 100) | int }}%;"></div>
+  <!-- Left: question sidebar -->
+  <div class="quiz-sidebar">
+    <div>
+      <p class="step-label">Question {{ q_num }} of {{ num_questions }}</p>
+      <div class="progress mb-4" style="height: 6px;">
+        <div class="progress-bar"
+             style="width: {{ (q_num / num_questions * 100)|int }}%; background: var(--navy);">
+        </div>
+      </div>
+
+      <p class="text-muted mb-1" style="font-size: 0.85rem;">Tap the neighborhood on the map</p>
+      <h1 class="mb-0" style="font-size: 2.2rem;">{{ question.find }}</h1>
+    </div>
+
+    <form id="quiz-form" method="POST">
+      <input type="hidden" name="answer" id="answer-input" value="">
+
+      <div class="selection-box mt-4" id="confirm-area">
+        <p class="mb-2 text-muted" style="font-size: 0.85rem;">
+          Selected: <strong id="clicked-name"></strong>
+        </p>
+        <button type="submit" class="btn btn-primary w-100">
+          {% if q_num == num_questions %}See Results →{% else %}Next →{% endif %}
+        </button>
+      </div>
+    </form>
   </div>
 
-  <h2 class="mb-1">Which zone is this neighborhood in?</h2>
-  <h1 class="mb-4 fw-bold">{{ question.neighborhood }}</h1>
+  <!-- Right: full-height map -->
+  <div class="quiz-map-col" id="map-container"></div>
 
-  <form method="POST">
-    {% for zone in zones %}
-    <button type="submit" name="answer" value="{{ zone.number }}"
-            class="btn btn-outline-secondary w-100 mb-2">
-      Zone {{ zone.number }} — {{ zone.name }}
-    </button>
-    {% endfor %}
-  </form>
+</div>
+{% endblock %}
 
-  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script>
+(function () {
+  const container = document.getElementById("map-container");
+  const W = container.clientWidth;
+  const H = container.clientHeight;
+
+  const svg = d3.select("#map-container")
+    .append("svg")
+    .attr("viewBox", `0 0 ${W} ${H}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .style("width", "100%")
+    .style("height", "100%");
+
+  // Water background
+  svg.append("rect").attr("width", W).attr("height", H).attr("fill", "#C9DDE8");
+
+  d3.json("/static/neighborhoods.geojson").then(function (geo) {
+    const projection = d3.geoMercator().fitSize([W, H], geo);
+    const pathGen = d3.geoPath().projection(projection);
+
+    // Background NTAs (not clickable — just fill the island)
+    svg.selectAll(".bg-path")
+      .data(geo.features.filter(d => !d.properties.quiz))
+      .join("path")
+      .attr("d", pathGen)
+      .attr("class", "bg-path");
+
+    // Quiz neighborhoods (clickable)
+    const quizPaths = svg.selectAll(".hood-path")
+      .data(geo.features.filter(d => d.properties.quiz))
+      .join("path")
+      .attr("d", pathGen)
+      .attr("class", "hood-path")
+      .attr("data-name", d => d.properties.name);
+
+    quizPaths.append("title").text(d => d.properties.name);
+
+    quizPaths.on("click", function (event, d) {
+      svg.selectAll(".hood-path").classed("selected", false);
+      d3.select(this).classed("selected", true);
+
+      const name = d.properties.name;
+      document.getElementById("answer-input").value = name;
+      document.getElementById("clicked-name").textContent = name;
+      document.getElementById("confirm-area").style.display = "block";
+    });
+  });
+}());
+</script>
+{% endblock %}
