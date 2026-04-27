@@ -22,9 +22,6 @@
       <input type="hidden" name="answer" id="answer-input" value="">
 
       <div class="selection-box mt-4" id="confirm-area">
-        <p class="mb-2 text-muted" style="font-size: 0.85rem;">
-          Selected: <strong id="clicked-name"></strong>
-        </p>
         <button type="submit" class="btn btn-primary w-100">
           {% if q_num == num_questions %}See Results →{% else %}Next →{% endif %}
         </button>
@@ -83,7 +80,6 @@
 
       const name = d.properties.name;
       document.getElementById("answer-input").value = name;
-      document.getElementById("clicked-name").textContent = name;
       document.getElementById("confirm-area").style.display = "block";
     });
   });

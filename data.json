@@ -9,15 +9,15 @@
       "neighborhoods": [
         {
           "name": "Harlem",
-          "fact": "Birthplace of the Harlem Renaissance in the 1920s. The Apollo Theater launched Ella Fitzgerald, James Brown & Stevie Wonder. It begins exactly where Central Park ends."
+          "fact": "110th–155th St in central and east Manhattan. Starts where Central Park's northern edge ends. Does NOT span to the Hudson — the west side at this latitude is Hamilton Heights."
         },
         {
           "name": "Washington Heights",
-          "fact": "Manhattan's highest natural point at 265 ft. George Washington commanded his Revolutionary War forces from here. The A-train runs express through this stretch."
+          "fact": "155th–193rd St, sitting on Manhattan's highest ridge. Sandwiched between Harlem below and Inwood above. The island is noticeably narrow here."
         },
         {
           "name": "Inwood",
-          "fact": "The last old-growth forest on Manhattan island survives here. Legend says the Dutch purchased all of Manhattan Island from the Lenape near this spot for just $24 in trade goods."
+          "fact": "Above 193rd St — the very northern tip of the island. Manhattan narrows to a point here with the Harlem River on the east and the Hudson on the west."
         }
       ]
     },
@@ -30,15 +30,15 @@
       "neighborhoods": [
         {
           "name": "Upper East Side",
-          "fact": "\"Museum Mile\" — 9 world-class museums packed into one strip of 5th Avenue, including the Met & Guggenheim. Among the most expensive real estate in the world."
+          "fact": "East of Central Park, 72nd–96th St. Fifth Avenue is its western border — the park is literally across the street. Everything east of the park to the East River."
         },
         {
           "name": "Upper West Side",
-          "fact": "Home to Lincoln Center, the Museum of Natural History & legendary deli Zabar's. Where Seinfeld, Westside Story, and Rosemary's Baby were all set."
+          "fact": "West of Central Park, 72nd–110th St. Squeezed between the park on the east and Riverside Park / the Hudson River on the west — two parks as its walls."
         },
         {
           "name": "Morningside Heights",
-          "fact": "Columbia University was founded in 1754 — older than the United States. Grant's Tomb is here, and yes — both Ulysses S. Grant AND his wife are actually buried inside."
+          "fact": "Just above the northwest corner of Central Park, roughly 110th–125th St on the west side. Columbia University sits at its center on the ridge."
         }
       ]
     },
@@ -51,15 +51,15 @@
       "neighborhoods": [
         {
           "name": "Midtown",
-          "fact": "Times Square draws 50 million visitors a year — more than the Eiffel Tower. The Empire State Building was constructed in just 410 days and has 1,576 steps to the top."
+          "fact": "The dense commercial core around 42nd–57th St. Times Square is dead center; Grand Central Terminal anchors 42nd & Park Ave on the east side."
         },
         {
           "name": "Hell's Kitchen",
-          "fact": "Named after a brutal 19th-century gang, its gentler alias is \"Clinton Hill.\" Most of Broadway's performers and crew live here. Great cheap food along 9th Avenue."
+          "fact": "West side of Midtown, 34th–57th St, west of 8th Avenue toward the Hudson River piers. Everything between the theater district and the water."
         },
         {
           "name": "Murray Hill",
-          "fact": "Named after Scottish merchant Robert Murray. The block known as \"Koreatown\" on 32nd Street has one of the densest concentrations of Korean restaurants outside of Seoul."
+          "fact": "East side of Midtown, roughly 30th–42nd St east of Park Ave. Just south of Grand Central, stretching toward the East River."
         }
       ]
     },
@@ -72,15 +72,15 @@
       "neighborhoods": [
         {
           "name": "Chelsea",
-          "fact": "The High Line — a 1.45-mile elevated park built on a decommissioned 1930s freight rail line — runs through here. Chelsea piers once docked the Titanic's sister ships."
+          "fact": "West side, 14th–30th St along the Hudson. The High Line elevated park runs through its middle north-south. Hudson Yards sits at its northern edge."
         },
         {
           "name": "Gramercy",
-          "fact": "The only private park in NYC — residents need an actual iron key to enter. The Flatiron Building at 23rd & Broadway is one of NYC's first skyscrapers (built 1902)."
+          "fact": "East side, 14th–23rd St around Lexington Ave. Small and easy to miss — look east of Union Square, between Chelsea to the west and the East River."
         },
         {
           "name": "Greenwich Village",
-          "fact": "Bob Dylan, Joan Baez, and Jimi Hendrix all lived within blocks of each other here in the 1960s. Stonewall Inn (gay rights movement birthplace) is on Christopher St."
+          "fact": "Below 14th St on the west side. The dead giveaway: the street grid goes diagonal and streets get names instead of numbers. West Village is its western slice."
         }
       ]
     },
@@ -93,15 +93,15 @@
       "neighborhoods": [
         {
           "name": "SoHo",
-          "fact": "\"South of Houston\" — Manhattanites pronounce it HOW-ston (not HEW-ston). The cast-iron commercial buildings from the 1800s are some of the finest in the world."
+          "fact": "South of Houston St, above Canal St, west of Lafayette. \"South of Houston\" — the name literally tells you where it is. Sits between Greenwich Village and Tribeca."
         },
         {
           "name": "Tribeca",
-          "fact": "\"Triangle Below Canal.\" Robert De Niro co-founded the Tribeca Film Festival here. One of the priciest zip codes in the U.S. — celebrity residents everywhere."
+          "fact": "Below Canal St, west of Broadway — a wedge shape pointing south. \"Triangle Below Canal\" is the name. Directly north of the Financial District."
         },
         {
           "name": "Financial District",
-          "fact": "Wall Street's \"wall\" was a real wooden stockade built in 1653. The NYSE is the world's largest stock exchange. The 9/11 Memorial pools sit where the Twin Towers stood."
+          "fact": "The southern tip of the island, below Fulton St. Wall Street runs east-west near the bottom. One World Trade marks the northwest corner of the neighborhood."
         }
       ]
     }
