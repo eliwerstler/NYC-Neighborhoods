@@ -93,6 +93,23 @@
       .style("pointer-events", "none");
 
     zonePaths.append("title").text(d => d.properties.name);
+
+    // Labels for current zone's neighborhoods
+    svg.selectAll(".zone-label")
+      .data(geo.features.filter(d => d.properties.quiz && d.properties.zone === ZONE_NUM))
+      .join("text")
+      .attr("class", "zone-label")
+      .attr("x", d => pathGen.centroid(d)[0])
+      .attr("y", d => pathGen.centroid(d)[1])
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "middle")
+      .style("pointer-events", "none")
+      .style("font-family", "'Inter', sans-serif")
+      .style("font-size", "11px")
+      .style("font-weight", "600")
+      .style("fill", "#fff")
+      .style("text-shadow", "0 1px 2px rgba(0,0,0,0.4)")
+      .text(d => d.properties.name);
   });
 }());
 </script>
