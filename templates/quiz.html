@@ -1,35 +1,16 @@
 {% extends "base.html" %}
-{% block title %}Quiz — Question {{ q_num }}{% endblock %}
+{% block title %}Quiz{% endblock %}
 
 {% block content %}
 <div class="quiz-layout">
 
-  <!-- Left: question sidebar -->
   <div class="quiz-sidebar">
     <div>
-      <p class="step-label">Question {{ q_num }} of {{ num_questions }}</p>
-      <div class="progress mb-4" style="height: 6px;">
-        <div class="progress-bar"
-             style="width: {{ (q_num / num_questions * 100)|int }}%; background: var(--navy);">
-        </div>
-      </div>
-
-      <p class="text-muted mb-1" style="font-size: 0.85rem;">Tap the neighborhood on the map</p>
-      <h1 class="mb-0" style="font-size: 2.2rem;">{{ question.find }}</h1>
+      <div id="sidebar-content"></div>
+      <p id="feedback" class="mt-3 mb-0" style="font-size:0.9rem;min-height:1.4em;font-weight:600;"></p>
     </div>
-
-    <form id="quiz-form" method="POST">
-      <input type="hidden" name="answer" id="answer-input" value="">
-
-      <div class="selection-box mt-4" id="confirm-area">
-        <button type="submit" class="btn btn-primary w-100">
-          {% if q_num == num_questions %}See Results →{% else %}Next →{% endif %}
-        </button>
-      </div>
-    </form>
   </div>
 
-  <!-- Right: full-height map -->
   <div class="quiz-map-col" id="map-container"></div>
 
 </div>
@@ -39,6 +20,40 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
 (function () {
+  const allQuestions = {{ questions | tojson }};
+  const NUM_QUESTIONS = {{ num_questions }};
+  const correctNames = {{ correct_names | tojson }};
+  const correctSet = new Set(correctNames);
+  let currentQ = {{ starting_q }};
+  const feedback = document.getElementById("feedback");
+
+  // ── Sidebar ────────────────────────────────────────────
+  function renderSidebar(idx, animate) {
+    const content = document.getElementById("sidebar-content");
+
+    function doUpdate() {
+      content.innerHTML =
+        `<p class="step-label">Question ${idx + 1} of ${NUM_QUESTIONS}</p>
+         <div class="progress mb-4" style="height:6px;">
+           <div class="progress-bar" style="width:${Math.round((idx+1)/NUM_QUESTIONS*100)}%;background:var(--navy);"></div>
+         </div>
+         <p class="text-muted mb-1" style="font-size:0.85rem;">Tap the neighborhood on the map</p>
+         <h1 class="mb-0" style="font-size:2.2rem;">${allQuestions[idx]}</h1>`;
+      if (animate) content.style.opacity = "1";
+    }
+
+    if (animate) {
+      content.style.transition = "opacity 0.15s";
+      content.style.opacity = "0";
+      setTimeout(doUpdate, 150);
+    } else {
+      doUpdate();
+    }
+  }
+
+  renderSidebar(currentQ, false);
+
+  // ── Map ────────────────────────────────────────────────
   const container = document.getElementById("map-container");
   const W = container.clientWidth;
   const H = container.clientHeight;
@@ -50,37 +65,82 @@
     .style("width", "100%")
     .style("height", "100%");
 
-  // Water background
   svg.append("rect").attr("width", W).attr("height", H).attr("fill", "#C9DDE8");
 
   d3.json("/static/neighborhoods.geojson").then(function (geo) {
     const projection = d3.geoMercator().fitSize([W, H], geo);
     const pathGen = d3.geoPath().projection(projection);
 
-    // Background NTAs (not clickable — just fill the island)
     svg.selectAll(".bg-path")
       .data(geo.features.filter(d => !d.properties.quiz))
-      .join("path")
-      .attr("d", pathGen)
-      .attr("class", "bg-path");
+      .join("path").attr("d", pathGen).attr("class", "bg-path");
 
-    // Quiz neighborhoods (clickable)
-    const quizPaths = svg.selectAll(".hood-path")
+    const paths = svg.selectAll(".quiz-hood")
       .data(geo.features.filter(d => d.properties.quiz))
       .join("path")
       .attr("d", pathGen)
-      .attr("class", "hood-path")
+      .attr("class", d => correctSet.has(d.properties.name) ? "hood-correct" : "hood-path")
       .attr("data-name", d => d.properties.name);
 
-    quizPaths.append("title").text(d => d.properties.name);
+    let busy = false;
+    let localWrong = 0;
 
-    quizPaths.on("click", function (event, d) {
-      svg.selectAll(".hood-path").classed("selected", false);
-      d3.select(this).classed("selected", true);
+    function advance() {
+      currentQ++;
+      localWrong = 0;
+      if (currentQ >= NUM_QUESTIONS) {
+        window.location.href = "/results";
+      } else {
+        feedback.textContent = "";
+        renderSidebar(currentQ, true);
+        busy = false;
+      }
+    }
 
-      const name = d.properties.name;
-      document.getElementById("answer-input").value = name;
-      document.getElementById("confirm-area").style.display = "block";
+    paths.on("click", function (event, d) {
+      if (busy) return;
+      const el = d3.select(this);
+      if (el.attr("class") !== "hood-path") return;
+      busy = true;
+
+      fetch("/quiz/check", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ q_index: currentQ, answer: d.properties.name })
+      })
+      .then(r => r.json())
+      .then(result => {
+        if (result.correct) {
+          const needsRetry = localWrong > 0;
+          el.attr("class", needsRetry ? "hood-yellow" : "hood-correct");
+          correctSet.add(d.properties.name);
+          feedback.style.color = needsRetry ? "#92610A" : "var(--success)";
+          feedback.textContent = "Correct!";
+          setTimeout(advance, 700);
+
+        } else if (localWrong === 0) {
+          // First wrong — red flash, one more chance
+          localWrong = 1;
+          el.attr("class", "hood-wrong");
+          feedback.style.color = "var(--danger)";
+          feedback.textContent = "Try again!";
+          setTimeout(() => {
+            el.attr("class", "hood-path");
+            feedback.textContent = "";
+            busy = false;
+          }, 700);
+
+        } else {
+          // Second wrong — mark it, move on
+          el.attr("class", "hood-wrong");
+          feedback.style.color = "var(--danger)";
+          feedback.textContent = "Wrong — moving on";
+          setTimeout(() => {
+            el.attr("class", "hood-path");
+            advance();
+          }, 1000);
+        }
+      });
     });
   });
 }());

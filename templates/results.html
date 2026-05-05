@@ -6,23 +6,28 @@
   <p class="step-label">Results</p>
   <div class="score-big mb-1">{{ score }}/{{ num_questions }}</div>
   <p class="text-muted mb-4">
-    {% if score == num_questions %}Perfect score!
-    {% elif score >= num_questions // 2 %}Good work — review the misses below.
-    {% else %}Keep studying — you'll get it.
+    {% if score == num_questions %}Perfect — every neighborhood first try.
+    {% elif score == 0 %}Keep studying — you'll get it.
+    {% else %}{{ score }} correct out of {{ num_questions }}.
     {% endif %}
   </p>
 
   {% for r in results %}
-  <div class="result-card {{ 'correct' if r.correct else 'incorrect' }}">
-    <div class="d-flex justify-content-between">
-      <strong>{{ r.target }}</strong>
-      <span>{{ '✓' if r.correct else '✗' }}</span>
-    </div>
-    {% if not r.correct %}
-    <p class="mb-0 mt-1" style="font-size: 0.88rem; color: var(--muted);">
-      You tapped: {{ r.user_answer }}
-    </p>
+    {% if r.correct and r.tries == 1 %}
+      {% set card_class = "correct" %}
+      {% set label = "first try ✓" %}
+    {% elif r.correct %}
+      {% set card_class = "second-try" %}
+      {% set label = "got it 2nd try ✓" %}
+    {% else %}
+      {% set card_class = "incorrect" %}
+      {% set label = "missed ✗" %}
     {% endif %}
+  <div class="result-card {{ card_class }}">
+    <div class="d-flex justify-content-between align-items-center">
+      <strong>{{ r.target }}</strong>
+      <span style="font-size:0.82rem; color:var(--muted);">{{ label }}</span>
+    </div>
   </div>
   {% endfor %}
 

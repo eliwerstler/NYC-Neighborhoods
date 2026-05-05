@@ -107,10 +107,20 @@
     }
   ],
   "quiz_questions": [
+    { "find": "Harlem" },
+    { "find": "Washington Heights" },
     { "find": "Inwood" },
-    { "find": "Hell's Kitchen" },
-    { "find": "Tribeca" },
+    { "find": "Upper East Side" },
+    { "find": "Upper West Side" },
     { "find": "Morningside Heights" },
-    { "find": "Gramercy" }
+    { "find": "Midtown" },
+    { "find": "Hell's Kitchen" },
+    { "find": "Murray Hill" },
+    { "find": "Chelsea" },
+    { "find": "Gramercy" },
+    { "find": "Greenwich Village" },
+    { "find": "SoHo" },
+    { "find": "Tribeca" },
+    { "find": "Financial District" }
   ]
 }

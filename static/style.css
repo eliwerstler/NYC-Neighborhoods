@@ -163,6 +163,27 @@ h1, h2, h3, h4, h5 {
   fill: var(--navy);
 }
 
+.hood-correct {
+  fill: var(--success);
+  stroke: #fff;
+  stroke-width: 1px;
+  pointer-events: none;
+}
+
+.hood-yellow {
+  fill: #F6C90E;
+  stroke: #fff;
+  stroke-width: 1px;
+  pointer-events: none;
+}
+
+.hood-wrong {
+  fill: var(--danger);
+  stroke: #fff;
+  stroke-width: 1px;
+  pointer-events: none;
+}
+
 /* legacy zone map (unused now but kept) */
 .zone-area {
   fill: var(--zone-default);
@@ -207,5 +228,6 @@ h1, h2, h3, h4, h5 {
   margin-bottom: 0.75rem;
 }
 
-.result-card.correct { border-left-color: var(--success); }
-.result-card.incorrect { border-left-color: var(--danger); }
+.result-card.correct     { border-left-color: var(--success); }
+.result-card.second-try  { border-left-color: #F6C90E; }
+.result-card.incorrect   { border-left-color: var(--danger); }
