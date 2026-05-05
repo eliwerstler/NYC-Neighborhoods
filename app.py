@@ -14,6 +14,12 @@ NUM_ZONES = len(ZONES)
 QUESTIONS = DATA["quiz_questions"]
 NUM_QUESTIONS = len(QUESTIONS)
 
+HOOD_TO_ZONE = {
+    hood["name"]: zone
+    for zone in ZONES
+    for hood in zone["neighborhoods"]
+}
+
 
 @app.route("/")
 def home():
@@ -92,16 +98,23 @@ def results():
     for i in range(NUM_QUESTIONS):
         q = QUESTIONS[order[i]]
         answered = str(i) in quiz_answers
-        if answered:
-            score += 1
         wrong_count = attempts.get(str(i), 0)
+        if answered and wrong_count == 0:
+            score += 2
+        elif answered:
+            score += 1
+        z = HOOD_TO_ZONE.get(q["find"], {})
         results_data.append({
             "target": q["find"],
             "correct": answered,
             "tries": wrong_count + (1 if answered else 0),
+            "zone_num": z.get("number", 0),
+            "zone_name": z.get("name", ""),
+            "zone_color": z.get("color", "#ccc"),
         })
+    max_score = NUM_QUESTIONS * 2
     return render_template("results.html", results=results_data, score=score,
-                           num_questions=NUM_QUESTIONS)
+                           max_score=max_score, num_questions=NUM_QUESTIONS)
 
 
 if __name__ == "__main__":

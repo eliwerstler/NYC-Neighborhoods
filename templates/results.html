@@ -4,31 +4,39 @@
 {% block content %}
 <div class="page">
   <p class="step-label">Results</p>
-  <div class="score-big mb-1">{{ score }}/{{ num_questions }}</div>
-  <p class="text-muted mb-4">
-    {% if score == num_questions %}Perfect — every neighborhood first try.
-    {% elif score == 0 %}Keep studying — you'll get it.
-    {% else %}{{ score }} correct out of {{ num_questions }}.
-    {% endif %}
-  </p>
+  <div class="score-big mb-0">{{ score }}<span style="font-size:2rem;color:var(--muted);">/{{ max_score }}</span></div>
+  <p class="text-muted mb-5">points</p>
 
-  {% for r in results %}
-    {% if r.correct and r.tries == 1 %}
-      {% set card_class = "correct" %}
-      {% set label = "first try ✓" %}
-    {% elif r.correct %}
-      {% set card_class = "second-try" %}
-      {% set label = "got it 2nd try ✓" %}
-    {% else %}
-      {% set card_class = "incorrect" %}
-      {% set label = "missed ✗" %}
-    {% endif %}
-  <div class="result-card {{ card_class }}">
-    <div class="d-flex justify-content-between align-items-center">
-      <strong>{{ r.target }}</strong>
-      <span style="font-size:0.82rem; color:var(--muted);">{{ label }}</span>
+  {% for zone_num, zone_results in results | groupby("zone_num") %}
+    {% set zone_results = zone_results | list %}
+    {% set zone_correct = zone_results | selectattr("correct") | list | length %}
+    {% set first = zone_results[0] %}
+    <div class="mb-4">
+      <div class="d-flex align-items-center mb-2">
+        <span style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--navy);">{{ first.zone_name }}</span>
+        <span class="ms-auto" style="font-size:0.82rem;color:var(--muted);font-weight:600;">{{ zone_correct }} / {{ zone_results | length }}</span>
+      </div>
+      <div style="border-left:3px solid var(--border);padding-left:0.75rem;">
+        {% for r in zone_results %}
+          {% if r.correct and r.tries == 1 %}
+            {% set card_class = "correct" %}
+            {% set label = "first try ✓" %}
+          {% elif r.correct %}
+            {% set card_class = "second-try" %}
+            {% set label = "got it 2nd try ✓" %}
+          {% else %}
+            {% set card_class = "incorrect" %}
+            {% set label = "missed ✗" %}
+          {% endif %}
+          <div class="result-card {{ card_class }}">
+            <div class="d-flex justify-content-between align-items-center">
+              <strong>{{ r.target }}</strong>
+              <span style="font-size:0.82rem;color:var(--muted);">{{ label }}</span>
+            </div>
+          </div>
+        {% endfor %}
+      </div>
     </div>
-  </div>
   {% endfor %}
 
   <div class="mt-4">
