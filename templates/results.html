@@ -2,45 +2,116 @@
 {% block title %}Quiz Results{% endblock %}
 
 {% block content %}
-<div class="page">
-  <p class="step-label">Results</p>
-  <div class="score-big mb-0">{{ score }}<span style="font-size:2rem;color:var(--muted);">/{{ max_score }}</span></div>
-  <p class="text-muted mb-5">points</p>
+<div class="quiz-layout">
 
-  {% for zone_num, zone_results in results | groupby("zone_num") %}
-    {% set zone_results = zone_results | list %}
-    {% set zone_correct = zone_results | selectattr("correct") | list | length %}
-    {% set first = zone_results[0] %}
-    <div class="mb-4">
-      <div class="d-flex align-items-center mb-2">
-        <span style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--navy);">{{ first.zone_name }}</span>
-        <span class="ms-auto" style="font-size:0.82rem;color:var(--muted);font-weight:600;">{{ zone_correct }} / {{ zone_results | length }}</span>
-      </div>
-      <div style="border-left:3px solid var(--border);padding-left:0.75rem;">
-        {% for r in zone_results %}
-          {% if r.correct and r.tries == 1 %}
-            {% set card_class = "correct" %}
-            {% set label = "first try ✓" %}
-          {% elif r.correct %}
-            {% set card_class = "second-try" %}
-            {% set label = "got it 2nd try ✓" %}
-          {% else %}
-            {% set card_class = "incorrect" %}
-            {% set label = "missed ✗" %}
-          {% endif %}
-          <div class="result-card {{ card_class }}">
-            <div class="d-flex justify-content-between align-items-center">
-              <strong>{{ r.target }}</strong>
-              <span style="font-size:0.82rem;color:var(--muted);">{{ label }}</span>
+  <!-- Left: score + result cards -->
+  <div class="quiz-sidebar" style="flex: 0 0 340px; justify-content: flex-start; overflow-y: auto;">
+    <p class="step-label">Results</p>
+    <div class="score-big mb-0">{{ score }}<span style="font-size:2rem;color:var(--muted);">/{{ max_score }}</span></div>
+    <p class="text-muted mb-4">points</p>
+
+    {% for zone_num, zone_results in results | groupby("zone_num") %}
+      {% set zone_results = zone_results | list %}
+      {% set zone_correct = zone_results | selectattr("correct") | list | length %}
+      {% set first = zone_results[0] %}
+      <div class="mb-4">
+        <div class="d-flex align-items-center mb-2">
+          <span style="font-family:'Playfair Display',serif;font-size:1.05rem;font-weight:700;color:var(--navy);">{{ first.zone_name }}</span>
+          <span class="ms-auto" style="font-size:0.82rem;color:var(--muted);font-weight:600;">{{ zone_correct }} / {{ zone_results | length }}</span>
+        </div>
+        <div style="border-left:3px solid var(--border);padding-left:0.75rem;">
+          {% for r in zone_results %}
+            {% if r.correct and r.tries == 1 %}
+              {% set card_class = "correct" %}
+              {% set label = "first try ✓" %}
+            {% elif r.correct %}
+              {% set card_class = "second-try" %}
+              {% set label = "got it 2nd try ✓" %}
+            {% else %}
+              {% set card_class = "incorrect" %}
+              {% set label = "missed ✗" %}
+            {% endif %}
+            <div class="result-card {{ card_class }}">
+              <div class="d-flex justify-content-between align-items-center">
+                <strong>{{ r.target }}</strong>
+                <span style="font-size:0.82rem;color:var(--muted);">{{ label }}</span>
+              </div>
             </div>
-          </div>
-        {% endfor %}
+          {% endfor %}
+        </div>
       </div>
-    </div>
-  {% endfor %}
+    {% endfor %}
 
-  <div class="mt-4">
-    <a href="/" class="btn btn-primary">Play Again</a>
+    <div class="mt-2">
+      <a href="/" class="btn btn-primary">Play Again</a>
+    </div>
   </div>
+
+  <!-- Right: full map with results colored -->
+  <div class="quiz-map-col" id="map-container"></div>
+
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
+<script>
+(function () {
+  const resultList = {{ results | tojson }};
+  const lookup = {};
+  resultList.forEach(r => { lookup[r.target] = r; });
+
+  function hoodClass(name) {
+    const r = lookup[name];
+    if (!r) return "bg-path";
+    if (r.correct && r.tries === 1) return "hood-correct";
+    if (r.correct) return "hood-yellow";
+    return "hood-wrong";
+  }
+
+  const container = document.getElementById("map-container");
+  const W = container.clientWidth;
+  const H = container.clientHeight;
+
+  const svg = d3.select("#map-container")
+    .append("svg")
+    .attr("viewBox", `0 0 ${W} ${H}`)
+    .attr("preserveAspectRatio", "xMidYMid meet")
+    .style("width", "100%")
+    .style("height", "100%");
+
+  svg.append("rect").attr("width", W).attr("height", H).attr("fill", "#C9DDE8");
+
+  d3.json("/static/neighborhoods.geojson").then(function (geo) {
+    const projection = d3.geoMercator().fitSize([W, H], geo);
+    const pathGen = d3.geoPath().projection(projection);
+
+    svg.selectAll(".bg-path")
+      .data(geo.features.filter(d => !d.properties.quiz))
+      .join("path").attr("d", pathGen).attr("class", "bg-path");
+
+    svg.selectAll(".quiz-result-hood")
+      .data(geo.features.filter(d => d.properties.quiz))
+      .join("path")
+      .attr("d", pathGen)
+      .attr("class", d => hoodClass(d.properties.name))
+      .style("pointer-events", "none");
+
+    svg.selectAll(".result-label")
+      .data(geo.features.filter(d => d.properties.quiz))
+      .join("text")
+      .attr("x", d => pathGen.centroid(d)[0])
+      .attr("y", d => pathGen.centroid(d)[1])
+      .attr("text-anchor", "middle")
+      .attr("dominant-baseline", "middle")
+      .style("pointer-events", "none")
+      .style("font-family", "'Inter', sans-serif")
+      .style("font-size", "11px")
+      .style("font-weight", "600")
+      .style("fill", "#fff")
+      .style("text-shadow", "0 1px 2px rgba(0,0,0,0.4)")
+      .text(d => d.properties.name);
+  });
+}());
+</script>
 {% endblock %}
