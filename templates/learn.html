@@ -4,9 +4,9 @@
 {% block content %}
 <div class="quiz-layout">
 
-  <div class="quiz-sidebar" style="flex: 0 0 380px; justify-content: flex-start; overflow-y: auto;">
-    <div id="sidebar-content"></div>
-    <div id="nav-buttons" class="mt-4"></div>
+  <div class="quiz-sidebar" style="flex: 0 0 380px; justify-content: flex-start; overflow: hidden;">
+    <div id="sidebar-content" style="flex: 1; overflow-y: auto; min-height: 0;"></div>
+    <div id="nav-buttons" style="flex-shrink: 0; padding-top: 1rem; border-top: 1px solid var(--border);"></div>
   </div>
 
   <div class="quiz-map-col" id="map-container"></div>
@@ -53,7 +53,7 @@
         : `<button class="btn btn-primary" onclick="goZone(${idx+1})">Next →</button>`;
 
       const backToQuiz = FROM_QUIZ
-        ? `<a href="/quiz" class="btn btn-outline-secondary w-100 mt-2">Back to Quiz →</a>`
+        ? `<a href="/quiz" class="btn btn-outline-secondary w-100 mt-2" style="margin-top:0.5rem!important;">Back to Quiz →</a>`
         : '';
 
       nav.innerHTML = `<div class="d-flex gap-2">${backBtn} ${nextBtn}</div>${backToQuiz}`;
