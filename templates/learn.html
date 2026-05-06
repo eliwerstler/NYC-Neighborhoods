@@ -6,7 +6,7 @@
 
   <div class="quiz-sidebar" style="flex: 0 0 380px; justify-content: flex-start; overflow-y: auto;">
     <div id="sidebar-content"></div>
-    <div id="nav-buttons" class="d-flex gap-2 mt-4"></div>
+    <div id="nav-buttons" class="mt-4"></div>
   </div>
 
   <div class="quiz-map-col" id="map-container"></div>
@@ -20,7 +20,8 @@
 (function () {
   const allZones = {{ zones | tojson }};
   const NUM_ZONES = {{ num_zones }};
-  let currentZone = 0;
+  const FROM_QUIZ = {{ from_quiz | tojson }};
+  let currentZone = {{ start_zone - 1 }};
   let quizPaths = null;
   let labels = null;
   let mapReady = false;
@@ -50,7 +51,12 @@
       const nextBtn = idx === NUM_ZONES - 1
         ? `<a href="/quiz" class="btn btn-primary">Start Quiz →</a>`
         : `<button class="btn btn-primary" onclick="goZone(${idx+1})">Next →</button>`;
-      nav.innerHTML = backBtn + " " + nextBtn;
+
+      const backToQuiz = FROM_QUIZ
+        ? `<a href="/quiz" class="btn btn-outline-secondary w-100 mt-2">Back to Quiz →</a>`
+        : '';
+
+      nav.innerHTML = `<div class="d-flex gap-2">${backBtn} ${nextBtn}</div>${backToQuiz}`;
 
       if (animate) {
         content.style.opacity = "1";
@@ -87,7 +93,7 @@
   };
 
   // ── Init sidebar ───────────────────────────────────────
-  renderSidebar(0, false);
+  renderSidebar(currentZone, false);
 
   // ── Map ────────────────────────────────────────────────
   const container = document.getElementById("map-container");
@@ -115,9 +121,9 @@
       .data(geo.features.filter(d => d.properties.quiz))
       .join("path")
       .attr("d", pathGen)
-      .attr("fill", d => d.properties.zone === 1 ? allZones[0].color : "#D1CBC0")
+      .attr("fill", d => d.properties.zone === currentZone + 1 ? allZones[currentZone].color : "#D1CBC0")
       .attr("stroke", "#fff")
-      .attr("stroke-width", d => d.properties.zone === 1 ? 1.5 : 0.4)
+      .attr("stroke-width", d => d.properties.zone === currentZone + 1 ? 1.5 : 0.4)
       .style("pointer-events", "none");
 
     const labelLayer = svg.append("g");
@@ -134,7 +140,7 @@
       .style("font-weight", "600")
       .style("fill", "#fff")
       .style("text-shadow", "0 1px 2px rgba(0,0,0,0.4)")
-      .style("opacity", d => d.properties.zone === 1 ? 1 : 0)
+      .style("opacity", d => d.properties.zone === currentZone + 1 ? 1 : 0)
       .text(d => d.properties.name);
 
     mapReady = true;

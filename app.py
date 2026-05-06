@@ -36,7 +36,10 @@ def start():
 
 @app.route("/learn")
 def learn():
-    return render_template("learn.html", zones=ZONES, num_zones=NUM_ZONES)
+    start_zone = max(1, min(NUM_ZONES, request.args.get("zone", 1, type=int)))
+    from_quiz = request.args.get("from") == "quiz"
+    return render_template("learn.html", zones=ZONES, num_zones=NUM_ZONES,
+                           start_zone=start_zone, from_quiz=from_quiz)
 
 
 def _get_quiz_order():
@@ -47,15 +50,25 @@ def _get_quiz_order():
     return session["quiz_order"]
 
 
+@app.route("/quiz/restart")
+def quiz_restart():
+    session.pop("quiz_order", None)
+    session.pop("quiz_answers", None)
+    session.pop("quiz_attempts", None)
+    return redirect(url_for("quiz"))
+
+
 @app.route("/quiz")
 def quiz():
     order = _get_quiz_order()
     questions = [QUESTIONS[i]["find"] for i in order]
+    question_zones = [HOOD_TO_ZONE.get(QUESTIONS[i]["find"], {}).get("number", 1) for i in order]
     quiz_answers = session.get("quiz_answers", {})
     correct_names = [questions[int(k)] for k in quiz_answers]
     starting_q = len(quiz_answers)
     return render_template("quiz.html",
                            questions=questions,
+                           question_zones=question_zones,
                            num_questions=NUM_QUESTIONS,
                            correct_names=correct_names,
                            starting_q=starting_q)

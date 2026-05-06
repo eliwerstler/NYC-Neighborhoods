@@ -21,6 +21,7 @@
 <script>
 (function () {
   const allQuestions = {{ questions | tojson }};
+  const questionZones = {{ question_zones | tojson }};
   const NUM_QUESTIONS = {{ num_questions }};
   const correctNames = {{ correct_names | tojson }};
   const correctSet = new Set(correctNames);
@@ -40,7 +41,8 @@
          </div>
          <p class="step-label mb-4">Streak &nbsp;<span style="color:var(--navy);font-size:1rem;font-weight:700;">${streak}</span></p>
          <p class="text-muted mb-1" style="font-size:0.85rem;">Tap the neighborhood on the map</p>
-         <h1 class="mb-0" style="font-size:2.2rem;">${allQuestions[idx]}</h1>`;
+         <h1 class="mb-0" style="font-size:2.2rem;">${allQuestions[idx]}</h1>
+         <a href="/learn?zone=${questionZones[idx]}&from=quiz" class="step-label mt-3 d-inline-block" style="text-decoration:none;color:var(--muted);">Review this area →</a>`;
       if (animate) content.style.opacity = "1";
     }
 
