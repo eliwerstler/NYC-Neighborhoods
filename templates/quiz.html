@@ -25,6 +25,7 @@
   const correctNames = {{ correct_names | tojson }};
   const correctSet = new Set(correctNames);
   let currentQ = {{ starting_q }};
+  let streak = 0;
   const feedback = document.getElementById("feedback");
 
   // ── Sidebar ────────────────────────────────────────────
@@ -34,9 +35,10 @@
     function doUpdate() {
       content.innerHTML =
         `<p class="step-label">Question ${idx + 1} of ${NUM_QUESTIONS}</p>
-         <div class="progress mb-4" style="height:6px;">
+         <div class="progress mb-3" style="height:6px;">
            <div class="progress-bar" style="width:${Math.round((idx+1)/NUM_QUESTIONS*100)}%;background:var(--navy);"></div>
          </div>
+         <p class="step-label mb-4">Streak &nbsp;<span style="color:var(--navy);font-size:1rem;font-weight:700;">${streak}</span></p>
          <p class="text-muted mb-1" style="font-size:0.85rem;">Tap the neighborhood on the map</p>
          <h1 class="mb-0" style="font-size:2.2rem;">${allQuestions[idx]}</h1>`;
       if (animate) content.style.opacity = "1";
@@ -112,6 +114,7 @@
       .then(result => {
         if (result.correct) {
           const needsRetry = localWrong > 0;
+          if (needsRetry) { streak = 0; } else { streak++; }
           el.attr("class", needsRetry ? "hood-yellow" : "hood-correct");
           correctSet.add(d.properties.name);
           feedback.style.color = needsRetry ? "#92610A" : "var(--success)";
@@ -121,6 +124,7 @@
         } else if (localWrong === 0) {
           // First wrong — red flash, one more chance
           localWrong = 1;
+          streak = 0;
           el.attr("class", "hood-wrong");
           feedback.style.color = "var(--danger)";
           feedback.textContent = "Try again!";
