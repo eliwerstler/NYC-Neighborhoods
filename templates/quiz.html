@@ -135,14 +135,12 @@
           }, 700);
 
         } else {
-          // Second wrong — mark it, move on
-          el.attr("class", "hood-wrong");
+          // Second wrong — reveal correct neighborhood in red, move on
+          paths.filter(d => d.properties.name === allQuestions[currentQ])
+            .attr("class", "hood-wrong");
           feedback.style.color = "var(--danger)";
           feedback.textContent = "Wrong — moving on";
-          setTimeout(() => {
-            el.attr("class", "hood-path");
-            advance();
-          }, 1000);
+          setTimeout(advance, 1000);
         }
       });
     });
