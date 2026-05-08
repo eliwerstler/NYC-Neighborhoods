@@ -9,118 +9,148 @@
       "neighborhoods": [
         {
           "name": "Harlem",
-          "fact": "110th–155th St in central and east Manhattan. Starts where Central Park's northern edge ends. Does NOT span to the Hudson — the west side at this latitude is Hamilton Heights."
+          "fact": "Apollo Theater · jazz & soul food · just north of Central Park"
         },
         {
           "name": "Washington Heights",
-          "fact": "155th–193rd St, sitting on Manhattan's highest ridge. Sandwiched between Harlem below and Inwood above. The island is noticeably narrow here."
+          "fact": "Dominican community · George Washington Bridge · highest point on the island"
         },
         {
           "name": "Inwood",
-          "fact": "Above 193rd St — the very northern tip of the island. Manhattan narrows to a point here with the Harlem River on the east and the Hudson on the west."
+          "fact": "Northernmost tip · last old-growth forest in Manhattan · very narrow island here"
         }
       ]
     },
     {
       "number": 2,
       "name": "Upper East & West Side",
-      "street_range": "72nd to 110th Street \u00b7 Central Park is the dividing line",
+      "street_range": "72nd to 110th Street · Central Park is the dividing line",
       "color": "#3498db",
       "color_light": "#aed6f1",
       "neighborhoods": [
         {
           "name": "Upper East Side",
-          "fact": "East of Central Park, 72nd–96th St. Fifth Avenue is its western border — the park is literally across the street. Everything east of the park to the East River."
+          "fact": "Museum Mile · old money · east of Central Park along 5th Ave"
         },
         {
           "name": "Upper West Side",
-          "fact": "West of Central Park, 72nd–110th St. Squeezed between the park on the east and Riverside Park / the Hudson River on the west — two parks as its walls."
+          "fact": "Lincoln Center · Natural History Museum · west of Central Park"
         },
         {
           "name": "Morningside Heights",
-          "fact": "Just above the northwest corner of Central Park, roughly 110th–125th St on the west side. Columbia University sits at its center on the ridge."
+          "fact": "Columbia University · northwest corner of Central Park · on a ridge"
         }
       ]
     },
     {
       "number": 3,
       "name": "Midtown",
-      "street_range": "34th to 72nd Street \u00b7 Penn Station & Grand Central are your anchors",
+      "street_range": "34th to 72nd Street · Penn Station & Grand Central are your anchors",
       "color": "#e74c3c",
       "color_light": "#f5b7b1",
       "neighborhoods": [
         {
           "name": "Midtown",
-          "fact": "The dense commercial core around 42nd–57th St. Times Square is dead center; Grand Central Terminal anchors 42nd & Park Ave on the east side."
+          "fact": "Times Square · Empire State Building · Grand Central Terminal"
         },
         {
           "name": "Hell's Kitchen",
-          "fact": "West side of Midtown, 34th–57th St, west of 8th Avenue toward the Hudson River piers. Everything between the theater district and the water."
+          "fact": "Theater district · Hudson River piers · west of 8th Ave"
         },
         {
           "name": "Murray Hill",
-          "fact": "East side of Midtown, roughly 30th–42nd St east of Park Ave. Just south of Grand Central, stretching toward the East River."
+          "fact": "Koreatown on 32nd St · young professionals · east side below Grand Central"
         }
       ]
     },
     {
       "number": 4,
       "name": "Downtown",
-      "street_range": "14th to 34th Street \u00b7 The grid starts bending below 14th",
+      "street_range": "14th to 34th Street · The grid starts bending below 14th",
       "color": "#e67e22",
       "color_light": "#fad7a0",
       "neighborhoods": [
         {
           "name": "Chelsea",
-          "fact": "West side, 14th–30th St along the Hudson. The High Line elevated park runs through its middle north-south. Hudson Yards sits at its northern edge."
+          "fact": "The High Line · art galleries · Hudson Yards on the north end"
         },
         {
           "name": "Gramercy",
-          "fact": "East side, 14th–23rd St around Lexington Ave. Small and easy to miss — look east of Union Square, between Chelsea to the west and the East River."
+          "fact": "Gramercy Park (key-only private park) · small & quiet · east of Union Square"
         },
         {
           "name": "Greenwich Village",
-          "fact": "Below 14th St on the west side. The dead giveaway: the street grid goes diagonal and streets get names instead of numbers. West Village is its western slice."
+          "fact": "NYU · Washington Square Park · streets go diagonal with names, not numbers"
         }
       ]
     },
     {
       "number": 5,
       "name": "Lower Manhattan",
-      "street_range": "Below 14th Street \u00b7 Streets have names, not numbers",
+      "street_range": "Below 14th Street · Streets have names, not numbers",
       "color": "#27ae60",
       "color_light": "#a9dfbf",
       "neighborhoods": [
         {
           "name": "SoHo",
-          "fact": "South of Houston St, above Canal St, west of Lafayette. \"South of Houston\" — the name literally tells you where it is. Sits between Greenwich Village and Tribeca."
+          "fact": "\"South of Houston\" · cast-iron buildings · shopping & galleries"
         },
         {
           "name": "Tribeca",
-          "fact": "Below Canal St, west of Broadway — a wedge shape pointing south. \"Triangle Below Canal\" is the name. Directly north of the Financial District."
+          "fact": "\"Triangle Below Canal\" · celebrity lofts · Tribeca Film Festival"
         },
         {
           "name": "Financial District",
-          "fact": "The southern tip of the island, below Fulton St. Wall Street runs east-west near the bottom. One World Trade marks the northwest corner of the neighborhood."
+          "fact": "Wall Street · NYSE · One World Trade · southern tip of the island"
         }
       ]
     }
   ],
   "quiz_questions": [
-    { "find": "Harlem" },
-    { "find": "Washington Heights" },
-    { "find": "Inwood" },
-    { "find": "Upper East Side" },
-    { "find": "Upper West Side" },
-    { "find": "Morningside Heights" },
-    { "find": "Midtown" },
-    { "find": "Hell's Kitchen" },
-    { "find": "Murray Hill" },
-    { "find": "Chelsea" },
-    { "find": "Gramercy" },
-    { "find": "Greenwich Village" },
-    { "find": "SoHo" },
-    { "find": "Tribeca" },
-    { "find": "Financial District" }
+    {
+      "find": "Harlem"
+    },
+    {
+      "find": "Washington Heights"
+    },
+    {
+      "find": "Inwood"
+    },
+    {
+      "find": "Upper East Side"
+    },
+    {
+      "find": "Upper West Side"
+    },
+    {
+      "find": "Morningside Heights"
+    },
+    {
+      "find": "Midtown"
+    },
+    {
+      "find": "Hell's Kitchen"
+    },
+    {
+      "find": "Murray Hill"
+    },
+    {
+      "find": "Chelsea"
+    },
+    {
+      "find": "Gramercy"
+    },
+    {
+      "find": "Greenwich Village"
+    },
+    {
+      "find": "SoHo"
+    },
+    {
+      "find": "Tribeca"
+    },
+    {
+      "find": "Financial District"
+    }
   ]
 }

@@ -5,7 +5,7 @@
 <div class="quiz-layout">
 
   <!-- Left: score + result cards -->
-  <div class="quiz-sidebar" style="flex: 0 0 340px; justify-content: flex-start; overflow-y: auto;">
+  <div class="quiz-sidebar" id="results-sidebar" style="flex: 0 0 340px; justify-content: flex-start; overflow-y: auto;">
     <p class="step-label">Results</p>
     <div class="score-big mb-0">{{ score }}<span style="font-size:2rem;color:var(--muted);">/{{ max_score }}</span></div>
     <p class="text-muted mb-4">points</p>
@@ -42,7 +42,8 @@
       </div>
     {% endfor %}
 
-    <div class="mt-2">
+    <div class="mt-2 d-flex flex-column gap-2">
+      <button id="review-btn" class="btn btn-outline-secondary" onclick="startReview()">Review what you missed →</button>
       <a href="/quiz/restart" class="btn btn-primary">Play Again</a>
     </div>
   </div>
@@ -69,6 +70,7 @@
     return "hood-wrong";
   }
 
+  // ── Map ────────────────────────────────────────────────
   const container = document.getElementById("map-container");
   const W = container.clientWidth;
   const H = container.clientHeight;
@@ -82,6 +84,8 @@
 
   svg.append("rect").attr("width", W).attr("height", H).attr("fill", "#C9DDE8");
 
+  let allPaths;
+
   d3.json("/static/neighborhoods.geojson").then(function (geo) {
     const projection = d3.geoMercator().fitSize([W, H], geo);
     const pathGen = d3.geoPath().projection(projection);
@@ -90,7 +94,7 @@
       .data(geo.features.filter(d => !d.properties.quiz))
       .join("path").attr("d", pathGen).attr("class", "bg-path");
 
-    svg.selectAll(".quiz-result-hood")
+    allPaths = svg.selectAll(".quiz-result-hood")
       .data(geo.features.filter(d => d.properties.quiz))
       .join("path")
       .attr("d", pathGen)
@@ -112,6 +116,73 @@
       .style("text-shadow", "0 1px 2px rgba(0,0,0,0.4)")
       .text(d => d.properties.name);
   });
+
+  function highlightHood(name) {
+    if (!allPaths) return;
+    allPaths
+      .style("fill", d => d.properties.name === name ? "var(--navy)" : "#C8D6DF")
+      .attr("stroke", d => d.properties.name === name ? "#fff" : "#bbb")
+      .attr("stroke-width", 1);
+  }
+
+  function resetHighlight() {
+    if (!allPaths) return;
+    allPaths
+      .style("fill", null)
+      .attr("stroke", "#fff")
+      .attr("stroke-width", 1);
+  }
+
+  // ── Review mode ────────────────────────────────────────
+  const toReview = resultList.filter(r => !r.correct || r.tries > 1);
+  let reviewIdx = 0;
+  const sidebar = document.getElementById("results-sidebar");
+  let originalSidebarHTML = null;
+
+  if (toReview.length === 0) {
+    document.getElementById("review-btn").style.display = "none";
+  }
+
+  window.startReview = function () {
+    originalSidebarHTML = sidebar.innerHTML;
+    reviewIdx = 0;
+    showReviewStep();
+  };
+
+  window.stepReview = function (dir) {
+    reviewIdx += dir;
+    showReviewStep();
+  };
+
+  window.exitReview = function () {
+    sidebar.innerHTML = originalSidebarHTML;
+    originalSidebarHTML = null;
+    resetHighlight();
+  };
+
+  function showReviewStep() {
+    const r = toReview[reviewIdx];
+    const pct = Math.round((reviewIdx + 1) / toReview.length * 100);
+    const backBtn = reviewIdx > 0
+      ? `<button class="btn btn-outline-secondary" onclick="stepReview(-1)">← Back</button>`
+      : "";
+    const fwdBtn = reviewIdx < toReview.length - 1
+      ? `<button class="btn btn-primary" onclick="stepReview(1)">Next →</button>`
+      : `<button class="btn btn-primary" onclick="exitReview()">Done</button>`;
+
+    sidebar.innerHTML = `
+      <p class="step-label">Reviewing · ${reviewIdx + 1} of ${toReview.length}</p>
+      <div class="progress mb-4" style="height:6px;">
+        <div class="progress-bar" style="width:${pct}%;background:var(--navy);"></div>
+      </div>
+      <p class="text-muted mb-1" style="font-size:0.8rem;">${r.zone_name}</p>
+      <h1 class="mb-3" style="font-size:2rem;">${r.target}</h1>
+      <p style="font-size:0.95rem;color:var(--text);line-height:1.6;">${r.fact}</p>
+      <div class="d-flex gap-2 mt-4">${backBtn}${fwdBtn}</div>
+      <button class="btn btn-link p-0 mt-3" style="font-size:0.85rem;color:var(--muted);" onclick="exitReview()">← Back to results</button>
+    `;
+    highlightHood(r.target);
+  }
 }());
 </script>
 {% endblock %}

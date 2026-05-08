@@ -20,6 +20,12 @@ HOOD_TO_ZONE = {
     for hood in zone["neighborhoods"]
 }
 
+HOOD_FACTS = {
+    hood["name"]: hood["fact"]
+    for zone in ZONES
+    for hood in zone["neighborhoods"]
+}
+
 
 @app.route("/")
 def home():
@@ -124,6 +130,7 @@ def results():
             "zone_num": z.get("number", 0),
             "zone_name": z.get("name", ""),
             "zone_color": z.get("color", "#ccc"),
+            "fact": HOOD_FACTS.get(q["find"], ""),
         })
     max_score = NUM_QUESTIONS * 2
     return render_template("results.html", results=results_data, score=score,
