@@ -41,7 +41,11 @@
          </div>
          <p class="step-label mb-4">Streak &nbsp;<span style="color:var(--navy);font-size:1rem;font-weight:700;">${streak}</span></p>
          <p class="text-muted mb-1" style="font-size:0.85rem;">Tap the neighborhood on the map</p>
-         <h1 class="mb-0" style="font-size:2.2rem;">${allQuestions[idx]}</h1>`;
+         <h1 class="mb-0" style="font-size:2.2rem;">${allQuestions[idx]}</h1>
+         <button id="hint-btn" class="btn btn-sm btn-outline-secondary mt-3" onclick="useHint()"
+           style="font-size:0.78rem;color:var(--muted);border-color:var(--border);letter-spacing:0.02em;">
+           Show zone
+         </button>`;
       if (animate) content.style.opacity = "1";
     }
 
@@ -87,10 +91,37 @@
 
     let busy = false;
     let localWrong = 0;
+    let hintUsed = false;
+
+    function highlightZone(zoneNum) {
+      paths
+        .style("opacity", d => d.properties.zone === zoneNum ? 1 : 0.35)
+        .attr("stroke", d => d.properties.zone === zoneNum ? "#E8A020" : "#fff")
+        .attr("stroke-width", d => d.properties.zone === zoneNum ? 2.5 : 0.5);
+    }
+
+    function clearZoneHighlight() {
+      paths.style("opacity", 1).attr("stroke", "#fff").attr("stroke-width", 1);
+    }
+
+    window.useHint = function () {
+      if (hintUsed || busy) return;
+      hintUsed = true;
+      const btn = document.getElementById("hint-btn");
+      if (btn) { btn.disabled = true; btn.textContent = "Zone shown"; btn.style.opacity = "0.45"; }
+      highlightZone(questionZones[currentQ]);
+      fetch("/quiz/hint", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ q_index: currentQ })
+      });
+    };
 
     function advance() {
       currentQ++;
       localWrong = 0;
+      hintUsed = false;
+      clearZoneHighlight();
       if (currentQ >= NUM_QUESTIONS) {
         window.location.href = "/results";
       } else {
@@ -114,7 +145,7 @@
       .then(r => r.json())
       .then(result => {
         if (result.correct) {
-          const needsRetry = localWrong > 0;
+          const needsRetry = localWrong > 0 || hintUsed;
           if (needsRetry) { streak = 0; } else { streak++; }
           el.attr("class", needsRetry ? "hood-yellow" : "hood-correct");
           correctSet.add(d.properties.name);

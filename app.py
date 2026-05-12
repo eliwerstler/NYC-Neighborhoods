@@ -107,6 +107,20 @@ def quiz_check():
     return {"correct": correct}
 
 
+@app.route("/quiz/hint", methods=["POST"])
+def quiz_hint():
+    data = request.get_json()
+    q_index = int(data.get("q_index", 0))
+    if q_index < 0 or q_index >= NUM_QUESTIONS:
+        return {"error": "invalid"}, 400
+    attempts = session.get("quiz_attempts", {})
+    key = str(q_index)
+    attempts[key] = attempts.get(key, 0) + 1
+    session["quiz_attempts"] = attempts
+    session.modified = True
+    return {"ok": True}
+
+
 @app.route("/results")
 def results():
     order = session.get("quiz_order", list(range(NUM_QUESTIONS)))
