@@ -8,8 +8,9 @@
   <div class="quiz-sidebar" id="results-sidebar" style="flex: 0 0 340px; justify-content: flex-start; overflow-y: auto;">
     <p class="step-label">Results</p>
     <div class="score-big mb-0">{{ score }}<span style="font-size:2rem;color:var(--muted);">/{{ max_score }}</span></div>
-    <p class="text-muted mb-1">points</p>
-    <div id="best-display" class="mb-3"></div>
+    <p class="text-muted mb-1">points &nbsp;·&nbsp; <span id="run-time" style="font-size:0.88rem;"></span></p>
+    <div id="best-display" class="mb-2"></div>
+    <div id="leaderboard" class="mb-4"></div>
 
     {% for zone_num, zone_results in results | groupby("zone_num") %}
       {% set zone_results = zone_results | list %}
@@ -59,21 +60,61 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
 (function () {
-  // ── Personal best ──────────────────────────────────
+  // ── Timer & history ────────────────────────────────
   const score = {{ score }};
   const maxScore = {{ max_score }};
-  const bestKey = "nyc_neighborhoods_best";
-  const prevBest = parseInt(localStorage.getItem(bestKey) || "0", 10);
-  const isNewBest = score > prevBest;
-  if (isNewBest) localStorage.setItem(bestKey, score);
-  const bestDisplay = document.getElementById("best-display");
-  if (isNewBest && prevBest > 0) {
-    bestDisplay.innerHTML = `<span class="best-badge new-best">New personal best</span>`;
-  } else if (isNewBest && prevBest === 0) {
-    bestDisplay.innerHTML = `<span class="best-badge new-best">First score saved</span>`;
-  } else {
-    bestDisplay.innerHTML = `<span class="best-badge">Best: ${prevBest}&thinsp;/&thinsp;${maxScore}</span>`;
+  const startTs = parseInt(sessionStorage.getItem("nyc_quiz_start") || "0");
+  const elapsedSec = startTs ? Math.round((Date.now() - startTs) / 1000) : null;
+  sessionStorage.removeItem("nyc_quiz_start");
+
+  function formatTime(s) {
+    if (!s) return "—";
+    const m = Math.floor(s / 60), sec = s % 60;
+    return `${m}:${String(sec).padStart(2, "0")}`;
   }
+
+  const timeEl = document.getElementById("run-time");
+  if (elapsedSec) timeEl.textContent = formatTime(elapsedSec);
+
+  const histKey = "nyc_quiz_history";
+  const newEntry = { score, maxScore, time: elapsedSec, ts: Date.now() };
+  const history = JSON.parse(localStorage.getItem(histKey) || "[]");
+  const hadHistory = history.length > 0;
+  history.push(newEntry);
+  history.sort((a, b) => b.score - a.score || (a.time || Infinity) - (b.time || Infinity));
+  if (history.length > 50) history.length = 50;
+  localStorage.setItem(histKey, JSON.stringify(history));
+  const currentIdx = history.findIndex(e => e.ts === newEntry.ts);
+
+  const bestDisplay = document.getElementById("best-display");
+  if (!hadHistory) {
+    bestDisplay.innerHTML = `<span class="best-badge new-best">First score saved</span>`;
+  } else if (currentIdx === 0) {
+    bestDisplay.innerHTML = `<span class="best-badge new-best">New personal best</span>`;
+  } else {
+    const best = history[0];
+    bestDisplay.innerHTML = `<span class="best-badge">Best&thinsp;${best.score}&thinsp;/&thinsp;${best.maxScore}</span>`;
+  }
+
+  // ── Leaderboard ────────────────────────────────────
+  const lb = document.getElementById("leaderboard");
+  const rows = history.map((e, i) => {
+    const isCurrent = e.ts === newEntry.ts;
+    return `<div style="display:flex;align-items:center;padding:0.5rem 1rem;border-bottom:1px solid var(--border);background:${isCurrent ? "rgba(10,35,66,0.06)" : "transparent"};">
+      <span style="font-size:0.72rem;color:var(--muted);min-width:1.6rem;font-weight:600;">${i + 1}</span>
+      <span style="font-weight:${isCurrent ? "700" : "500"};font-size:0.92rem;color:${isCurrent ? "var(--navy)" : "var(--text)"};">${e.score}<span style="color:var(--muted);font-weight:400;font-size:0.78rem;">/${e.maxScore}</span></span>
+      <span style="margin-left:auto;font-size:0.82rem;color:var(--muted);font-variant-numeric:tabular-nums;">${formatTime(e.time)}</span>
+    </div>`;
+  }).join("");
+
+  lb.innerHTML = `
+    <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden;">
+      <div style="display:flex;align-items:center;padding:0.4rem 1rem 0.4rem 2.6rem;background:var(--surface);border-bottom:1px solid var(--border);">
+        <span style="font-size:0.67rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);flex:1;">Score</span>
+        <span style="font-size:0.67rem;letter-spacing:0.08em;text-transform:uppercase;color:var(--muted);">Time</span>
+      </div>
+      <div style="max-height:222px;overflow-y:auto;">${rows}</div>
+    </div>`;
 
   const resultList = {{ results | tojson }};
   const lookup = {};

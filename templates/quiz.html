@@ -27,6 +27,7 @@
   const correctSet = new Set(correctNames);
   let currentQ = {{ starting_q }};
   let streak = 0;
+  if (currentQ === 0) sessionStorage.setItem("nyc_quiz_start", Date.now());
   const feedback = document.getElementById("feedback");
 
   // ── Sidebar ────────────────────────────────────────────
