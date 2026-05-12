@@ -60,6 +60,18 @@
 
   renderSidebar(currentQ, false);
 
+  // ── Streak milestones ──────────────────────────────
+  const milestoneMessages = { 5: "5 in a row", 10: "10 in a row — impressive", 15: "15 in a row — you know this city", 20: "20 in a row — perfect" };
+  function checkMilestone(s) {
+    const msg = milestoneMessages[s] || (s > 0 && s % 5 === 0 ? `${s} in a row` : null);
+    if (!msg) return;
+    const toast = document.createElement("div");
+    toast.className = "milestone-toast";
+    toast.textContent = msg;
+    document.body.appendChild(toast);
+    setTimeout(() => toast.remove(), 2300);
+  }
+
   // ── Map ────────────────────────────────────────────────
   const container = document.getElementById("map-container");
   const W = container.clientWidth;
@@ -146,7 +158,7 @@
       .then(result => {
         if (result.correct) {
           const needsRetry = localWrong > 0 || hintUsed;
-          if (needsRetry) { streak = 0; } else { streak++; }
+          if (needsRetry) { streak = 0; } else { streak++; checkMilestone(streak); }
           el.attr("class", needsRetry ? "hood-yellow" : "hood-correct");
           correctSet.add(d.properties.name);
           feedback.style.color = needsRetry ? "#92610A" : "var(--success)";

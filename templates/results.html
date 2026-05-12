@@ -8,7 +8,8 @@
   <div class="quiz-sidebar" id="results-sidebar" style="flex: 0 0 340px; justify-content: flex-start; overflow-y: auto;">
     <p class="step-label">Results</p>
     <div class="score-big mb-0">{{ score }}<span style="font-size:2rem;color:var(--muted);">/{{ max_score }}</span></div>
-    <p class="text-muted mb-4">points</p>
+    <p class="text-muted mb-1">points</p>
+    <div id="best-display" class="mb-3"></div>
 
     {% for zone_num, zone_results in results | groupby("zone_num") %}
       {% set zone_results = zone_results | list %}
@@ -58,6 +59,22 @@
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
 (function () {
+  // ── Personal best ──────────────────────────────────
+  const score = {{ score }};
+  const maxScore = {{ max_score }};
+  const bestKey = "nyc_neighborhoods_best";
+  const prevBest = parseInt(localStorage.getItem(bestKey) || "0", 10);
+  const isNewBest = score > prevBest;
+  if (isNewBest) localStorage.setItem(bestKey, score);
+  const bestDisplay = document.getElementById("best-display");
+  if (isNewBest && prevBest > 0) {
+    bestDisplay.innerHTML = `<span class="best-badge new-best">New personal best</span>`;
+  } else if (isNewBest && prevBest === 0) {
+    bestDisplay.innerHTML = `<span class="best-badge new-best">First score saved</span>`;
+  } else {
+    bestDisplay.innerHTML = `<span class="best-badge">Best: ${prevBest}&thinsp;/&thinsp;${maxScore}</span>`;
+  }
+
   const resultList = {{ results | tojson }};
   const lookup = {};
   resultList.forEach(r => { lookup[r.target] = r; });

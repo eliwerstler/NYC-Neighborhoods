@@ -231,3 +231,49 @@ h1, h2, h3, h4, h5 {
 .result-card.correct     { border-left-color: var(--success); }
 .result-card.second-try  { border-left-color: #F6C90E; }
 .result-card.incorrect   { border-left-color: var(--danger); }
+
+/* ── Streak milestone toast ────────────────────────── */
+@keyframes milestone-pop {
+  0%   { opacity: 0; transform: translateX(-50%) translateY(14px) scale(0.9); }
+  14%  { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1.04); }
+  70%  { opacity: 1; transform: translateX(-50%) translateY(0)    scale(1); }
+  100% { opacity: 0; transform: translateX(-50%) translateY(-10px) scale(0.96); }
+}
+
+.milestone-toast {
+  position: fixed;
+  top: 2rem;
+  left: 50%;
+  background: var(--navy);
+  color: #fff;
+  padding: 0.55rem 1.6rem;
+  border-radius: 99px;
+  font-size: 0.87rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  animation: milestone-pop 2.3s ease forwards;
+  pointer-events: none;
+  z-index: 9999;
+  white-space: nowrap;
+}
+
+/* ── Personal best badge ───────────────────────────── */
+@keyframes best-pop {
+  0%   { opacity: 0; transform: translateY(6px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+
+.best-badge {
+  display: inline-block;
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 1.25rem;
+}
+
+.best-badge.new-best {
+  color: var(--success);
+  animation: best-pop 0.4s ease both;
+}
