@@ -45,7 +45,7 @@
     {% endfor %}
 
     <div class="mt-2 d-flex flex-column gap-2">
-      <button id="review-btn" class="btn btn-outline-secondary" onclick="startReview()">Review what you missed →</button>
+      <button id="review-btn" class="btn btn-outline-secondary" onclick="startReview()">Review what you missed →<kbd>R</kbd></button>
       <a href="/quiz/restart" class="btn btn-primary">Play Again</a>
     </div>
   </div>
@@ -222,11 +222,11 @@
     const r = toReview[reviewIdx];
     const pct = Math.round((reviewIdx + 1) / toReview.length * 100);
     const backBtn = reviewIdx > 0
-      ? `<button class="btn btn-outline-secondary" onclick="stepReview(-1)">← Back</button>`
+      ? `<button class="btn btn-outline-secondary" onclick="stepReview(-1)">← Back<kbd>←</kbd></button>`
       : "";
     const fwdBtn = reviewIdx < toReview.length - 1
-      ? `<button class="btn btn-primary" onclick="stepReview(1)">Next →</button>`
-      : `<button class="btn btn-primary" onclick="exitReview()">Done</button>`;
+      ? `<button class="btn btn-primary" onclick="stepReview(1)">Next →<kbd>→</kbd></button>`
+      : `<button class="btn btn-primary" onclick="exitReview()">Done<kbd>Esc</kbd></button>`;
 
     sidebar.innerHTML = `
       <p class="step-label">Reviewing · ${reviewIdx + 1} of ${toReview.length}</p>
@@ -241,6 +241,21 @@
     `;
     highlightHood(r.target);
   }
+  // ── Keyboard shortcuts ──────────────────────────────
+  document.addEventListener("keydown", e => {
+    if (e.target.matches("button, a, input, textarea")) return;
+    if (originalSidebarHTML !== null) {
+      if (e.key === "ArrowRight" || e.key === "Enter") {
+        if (reviewIdx < toReview.length - 1) stepReview(1); else exitReview();
+      } else if (e.key === "ArrowLeft") {
+        if (reviewIdx > 0) stepReview(-1);
+      } else if (e.key === "Escape") {
+        exitReview();
+      }
+    } else {
+      if ((e.key === "r" || e.key === "R") && toReview.length > 0) startReview();
+    }
+  });
 }());
 </script>
 {% endblock %}

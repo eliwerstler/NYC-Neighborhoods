@@ -46,11 +46,11 @@
          ).join("")}`;
 
       const backBtn = idx === 0
-        ? `<a href="/" class="btn btn-outline-secondary">← Back</a>`
-        : `<button class="btn btn-outline-secondary" onclick="goZone(${idx-1})">← Back</button>`;
+        ? `<a href="/" class="btn btn-outline-secondary">← Back<kbd>←</kbd></a>`
+        : `<button class="btn btn-outline-secondary" onclick="goZone(${idx-1})">← Back<kbd>←</kbd></button>`;
       const nextBtn = idx === NUM_ZONES - 1
-        ? `<a href="/quiz" class="btn btn-primary">Start Quiz →</a>`
-        : `<button class="btn btn-primary" onclick="goZone(${idx+1})">Next →</button>`;
+        ? `<a href="/quiz" class="btn btn-primary">Start Quiz →<kbd>→</kbd></a>`
+        : `<button class="btn btn-primary" onclick="goZone(${idx+1})">Next →<kbd>→</kbd></button>`;
 
       const backToQuiz = FROM_QUIZ
         ? `<a href="/quiz" class="btn btn-outline-secondary w-100 mt-2" style="margin-top:0.5rem!important;">Back to Quiz →</a>`
@@ -144,6 +144,18 @@
       .text(d => d.properties.name);
 
     mapReady = true;
+  });
+
+  // ── Keyboard shortcuts ──────────────────────────────
+  document.addEventListener("keydown", e => {
+    if (e.target.matches("button, a, input, textarea")) return;
+    if (e.key === "ArrowRight") {
+      if (currentZone < NUM_ZONES - 1) goZone(currentZone + 1);
+      else window.location.href = "/quiz";
+    } else if (e.key === "ArrowLeft") {
+      if (currentZone > 0) goZone(currentZone - 1);
+      else window.location.href = "/";
+    }
   });
 }());
 </script>
