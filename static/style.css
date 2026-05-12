@@ -232,6 +232,84 @@ h1, h2, h3, h4, h5 {
 .result-card.second-try  { border-left-color: #F6C90E; }
 .result-card.incorrect   { border-left-color: var(--danger); }
 
+/* ── Shortcuts help button & panel ────────────────── */
+.shortcuts-btn {
+  position: fixed;
+  top: 1rem;
+  right: 1rem;
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  border: 1px solid var(--border);
+  background: var(--bg);
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  transition: background 0.15s, color 0.15s, border-color 0.15s;
+  line-height: 1;
+}
+
+.shortcuts-btn:hover { background: var(--surface); color: var(--navy); }
+.shortcuts-btn.open  { background: var(--navy); color: #fff; border-color: var(--navy); }
+
+.shortcuts-panel {
+  position: fixed;
+  top: 3.1rem;
+  right: 1rem;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: 0 8px 28px rgba(0,0,0,0.13);
+  z-index: 999;
+  min-width: 210px;
+  overflow: hidden;
+  transform-origin: top right;
+  animation: shortcuts-in 0.14s ease;
+}
+
+@keyframes shortcuts-in {
+  from { opacity: 0; transform: scale(0.94) translateY(-4px); }
+  to   { opacity: 1; transform: scale(1)    translateY(0); }
+}
+
+.shortcuts-panel-header {
+  padding: 0.5rem 0.9rem;
+  font-size: 0.65rem;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--muted);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg);
+}
+
+.shortcuts-row {
+  display: flex;
+  align-items: center;
+  padding: 0.42rem 0.9rem;
+  border-bottom: 1px solid var(--border);
+  gap: 0.7rem;
+}
+
+.shortcuts-row:last-child { border-bottom: none; }
+
+.shortcuts-row kbd {
+  margin-left: 0;
+  min-width: 1.9rem;
+  text-align: center;
+  flex-shrink: 0;
+}
+
+.shortcuts-row-desc {
+  font-size: 0.82rem;
+  color: var(--text);
+}
+
 /* ── Keyboard hint badges ──────────────────────────── */
 kbd {
   font-family: 'Inter', sans-serif;

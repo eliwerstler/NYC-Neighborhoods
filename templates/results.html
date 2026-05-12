@@ -57,6 +57,14 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+window.PAGE_SHORTCUTS = [
+  { key: "R",   desc: "Review missed neighborhoods" },
+  { key: "→",   desc: "Next (while reviewing)" },
+  { key: "←",   desc: "Previous (while reviewing)" },
+  { key: "Esc", desc: "Exit review" },
+];
+</script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
 (function () {

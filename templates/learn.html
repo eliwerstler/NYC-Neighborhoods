@@ -15,6 +15,12 @@
 {% endblock %}
 
 {% block scripts %}
+<script>
+window.PAGE_SHORTCUTS = [
+  { key: "→", desc: "Next zone" },
+  { key: "←", desc: "Previous zone" },
+];
+</script>
 <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
 <script>
 (function () {
