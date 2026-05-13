@@ -1,1 +1,7 @@
-# Eli link to youtube: https://youtu.be/Ry3fO4ZKggw
+# Team Members
+
+- Eli Werstler — eliwerstler
+- Link to Youtube: https://youtu.be/8ONH5KD4OYY
+
+- Duncan Greene — DuncBoi
+- Link to Youtube
