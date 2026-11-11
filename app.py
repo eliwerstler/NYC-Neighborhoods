@@ -1,10 +1,11 @@
 from flask import Flask, render_template, redirect, url_for, session, request
 import json
+import os
 import random
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = "nyc-neighborhoods-secret"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-only-secret")
 
 with open("data.json") as f:
     DATA = json.load(f)
